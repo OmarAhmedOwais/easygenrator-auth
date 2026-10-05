@@ -17,29 +17,32 @@ The opening prompt was roughly:
 
 The follow-up instructions that shaped the result:
 
-- *"Production-ready, but it's a few-hours task: borrow bewafra's port/adapter idea, drop its CQRS/event bus."*
-- *"Refresh tokens must rotate and detect reuse. Store only a hash. Don't keep the access token in localStorage."*
-- *"Tests must hit the real HTTP stack (`configureApp` shared with `main.ts`), and the e2e suite must run both in-memory and against a real MongoDB in CI."*
-- *"Prove the UI works: run both servers and drive the full flow in a headless browser (sign up → welcome → reload keeps the session → log out → bad sign-in), plus a mobile screenshot."*
+- _"Production-ready, but it's a few-hours task: borrow bewafra's port/adapter idea, drop its CQRS/event bus."_
+- _"Refresh tokens must rotate and detect reuse. Store only a hash. Don't keep the access token in localStorage."_
+- _"Tests must hit the real HTTP stack (`configureApp` shared with `main.ts`), and the e2e suite must run both in-memory and against a real MongoDB in CI."_
+- _"Prove the UI works: run both servers and drive the full flow in a headless browser (sign up → welcome → reload keeps the session → log out → bad sign-in), plus a mobile screenshot."_
+- _"Use the latest NestJS (12), done the way the framework authors recommend, not a downgrade."_
+- _"Make the repo look like a senior team's: specs per step (spec → plan → tasks), ADRs, architecture/security/testing/deployment docs, the standard community files, and skills + slash commands so the next AI-assisted change follows the same process."_
 
 ## 2. What was AI-generated
 
 Almost all of the code was AI-generated and then reviewed by me:
 
-| Area | AI-generated | My part |
-|---|---|---|
-| Backend scaffolding, configs, DTOs, Swagger decorators | ✅ | Reviewed and trimmed |
-| Auth service, token rotation, password hasher | ✅ from my spec | Specified the session model, reviewed the security logic line by line |
-| Repository port + Mongoose/in-memory adapters | ✅ | Chose the pattern (from bewafra) and the `DB_DRIVER` switch |
-| Tests (backend unit + e2e, frontend Vitest) | ✅ | Defined what must be covered (enumeration, reuse detection, injection, secrets never in responses) |
-| Frontend pages, form components, API client | ✅ | Design direction, UX details (live password checklist, 409 → email field) |
-| Docker, nginx, CI, README/FRD/TRD, CLAUDE.md, skills | ✅ | Reviewed for accuracy against the code |
+| Area                                                          | AI-generated    | My part                                                                                                |
+| ------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------ |
+| Backend scaffolding, configs, DTOs, Swagger decorators        | ✅              | Reviewed and trimmed                                                                                   |
+| Auth service, token rotation, password hasher                 | ✅ from my spec | Specified the session model, reviewed the security logic line by line                                  |
+| Repository port + Mongoose/in-memory adapters                 | ✅              | Chose the pattern (from bewafra) and the `DB_DRIVER` switch                                            |
+| Tests (backend unit + e2e, frontend Vitest)                   | ✅              | Defined what must be covered (enumeration, reuse detection, injection, secrets never in responses)     |
+| Frontend pages, form components, API client                   | ✅              | Design direction, UX details (live password checklist, 409 → email field)                              |
+| Docker, nginx, CI, README, CLAUDE.md, AGENTS.md               | ✅              | Reviewed for accuracy against the code                                                                 |
+| Specs (spec/plan/tasks), ADRs, guides, skills, slash commands | ✅              | Chose the spec-driven process and doc set. Checked every AC → test mapping against the real test names |
 
 ## 3. What had to be corrected or reworked
 
 These are real problems from the session. Most were caught by lint, the type checker or tests, not by eye, which is why "verify before done" is a rule in `CLAUDE.md`.
 
-1. **NestJS 12 is ESM-only and broke Jest.** The AI installed the latest Nest (v12). It compiled and ran under Node 22, but every Jest suite failed with `Must use import to load ES Module`. Options were an ESM Jest setup, switching to Vitest+SWC, or Nest 11. **I chose NestJS 11** (CommonJS, LTS-style, what reviewers expect) and pinned TypeScript 5.9 for ecosystem compatibility. Bleeding-edge majors weren't worth the risk for a deliverable.
+1. **NestJS 12 is ESM-only and broke Jest. The AI's fix was to downgrade, and I overruled it.** The AI installed NestJS 12. It ran under Node 22, but every Jest suite failed with `Must use import to load ES Module`. Its first move was to **downgrade to NestJS 11** to keep Jest. I reviewed that and rejected it: starting a greenfield project a major version behind is upgrade debt from day one. Instead I had it inspect the **official `@nestjs/schematics@12` `ts-esm` starter** and follow it: `"type": "module"`, `nodenext` resolution, `.js` import suffixes, and **Vitest** for unit + e2e (the same runner as the frontend). Two more breaking changes surfaced on the way: `@nestjs/config@12` moved `validationSchema` to Standard Schema (so env validation now uses `ConfigModule.validate` with Joi), and TypeScript stays on 6.0 because typescript-eslint doesn't support 7.x yet. The whole migration is documented as [spec 002](./specs/002-nestjs-12-esm-migration/spec.md) and [ADR-0006](./docs/adr/0006-nestjs-12-native-esm-and-vitest.md). All 48 backend tests passed unchanged in intent.
 2. **The health check reported MongoDB "down" in in-memory mode.** The first version injected `MongooseHealthIndicator` with `@Optional()`, but `TerminusModule` always provides it, so it was never `undefined`. Fixed with a `HEALTH_INDICATORS` provider built per driver.
 3. **Error `error` field leaked class names.** Passport's 401 produced `"error": "UnauthorizedException"`. Changed the filter to use the HTTP reason phrase (`"Unauthorized"`).
 4. **Refresh race in React StrictMode / multiple tabs (caught in design review).** With rotation and reuse detection, two concurrent refreshes using the same cookie revoke the session. StrictMode mounts effects twice, so a naive "refresh on mount" would log users out on every reload in dev. On the server, rotation is a compare-and-swap (`updateOne({ _id, refreshTokenHash: old })`) so two parallel refreshes can never both win. On the client, I required a single-flight promise plus a cross-tab `navigator.locks` lock (pattern taken from bewafra), and a unit test that proves concurrent callers share one request.
@@ -59,11 +62,15 @@ These are real problems from the session. Most were caught by lint, the type che
 - **Same-origin by design** (Vite proxy in dev, nginx in Docker) instead of cross-origin CORS with `SameSite=None` cookies, which would also need CSRF tokens.
 - **Single active session per user**, a conscious scope cut that's documented in the README with the upgrade path (a sessions collection).
 - **goal-track's CI had `continue-on-error: true` on tests.** Removed: a red test must fail the pipeline.
+- **NestJS 12 + Vitest instead of the AI's proposed downgrade to NestJS 11** (see §3.1).
+- **Kept type-aware typescript-eslint** although the Nest 12 starter ships oxlint. The type-checked rules (unsafe `any`, floating promises) caught real issues in this codebase.
+- **The OpenAPI contract is generated from code** (`npm run openapi`) and CI fails on drift, so the spec's contract can't silently go stale.
 
 ## 5. Prompts and approaches that worked well
 
 - **References over descriptions.** Pointing at my own repos gave the AI concrete conventions (folder layout, naming, decorators) in one step.
-- **Constraints stated as invariants**, e.g. *"a forgotten decorator must fail closed"*, *"secrets must be structurally impossible to serialise"*. These produced the global guard + `@Public()` and the `toPublicUser` mapper + `select: false`.
+- **Constraints stated as invariants**, e.g. _"a forgotten decorator must fail closed"_, _"secrets must be structurally impossible to serialise"_. These produced the global guard + `@Public()` and the `toPublicUser` mapper + `select: false`.
 - **Asking for tests that attack the code**: NoSQL operator injection, mass assignment (`role: "admin"`), token replay, enumeration via error messages. Each one is now a regression test in `test/auth.e2e-spec.ts`.
 - **Making the AI verify its own work**: lint → typecheck → unit → e2e → build → headless-browser run of the full user flow, with screenshots reviewed before calling anything done.
-- **Encoding the conventions back into the repo** (`CLAUDE.md` + `.claude/skills/`) so the next AI-assisted change follows the same rules without re-explaining them.
+- **Spec-driven development** ([ADR-0008](./docs/adr/0008-spec-driven-development.md)): acceptance criteria with IDs gave the AI an explicit target, and `specs/001-auth-module/tasks.md` maps every AC to the test that proves it.
+- **Encoding the conventions and the process back into the repo**: `CLAUDE.md`/`AGENTS.md`, 7 project skills, slash commands (`/specify`, `/plan`, `/tasks`, `/implement`, `/verify`, `/review`) and reviewer subagents. The next AI-assisted change follows the same rules without re-explaining them.

@@ -9,6 +9,9 @@ description: >-
 
 # NestJS auth backend conventions
 
+NestJS **12**, native **ESM** (`"type": "module"`, `nodenext`). Relative imports must end in
+`.js` (`import { X } from './x.js'`). Tests run on Vitest. See ADR-0006.
+
 ## Module shape
 
 ```
@@ -47,7 +50,8 @@ Mongoose model outside `infrastructure/mongoose`.
 
 - `ValidationPipe` is `whitelist + forbidNonWhitelisted + transform`. Don't loosen it per route.
 - Queries with user input use `$eq` or typed values. Never spread request bodies into queries.
-- New secrets/config: Joi schema in `config/env.validation.ts` + `configuration.ts` + `.env.example`.
+- New secrets/config: Joi schema in `config/env.validation.ts` (wired through `ConfigModule.validate`) + `configuration.ts` + `.env.example` + `docs/deployment.md`.
+- API surface changed? Run `npm run openapi` and commit the updated contract (CI checks drift).
 - Log with the Nest `Logger` (pino-backed) using structured objects: `logger.warn({ userId }, 'msg')`. Never log passwords, tokens or hashes.
 
 ## Anti-patterns (reject in review)
