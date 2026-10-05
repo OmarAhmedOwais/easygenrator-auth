@@ -1,0 +1,46 @@
+# One command to run everything:  docker compose up --build   ->  http://localhost:8080
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', 'db.adminCommand("ping").ok']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '27017:27017'
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      LOG_LEVEL: info
+      DB_DRIVER: mongo
+      MONGODB_URI: mongodb://mongo:27017/easygenerator-auth
+      CORS_ORIGINS: http://localhost:8080
+      # Demo values - override via a .env file next to this compose file for anything real.
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-compose-demo-access-secret-change-me-0123456789}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-compose-demo-refresh-secret-change-me-0123456789}
+      COOKIE_SECURE: 'false' # plain http on localhost; set true behind HTTPS
+      SWAGGER_ENABLED: 'true'
+    ports:
+      - '3000:3000'
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - '8080:80'
+
+volumes:
+  mongo-data:
