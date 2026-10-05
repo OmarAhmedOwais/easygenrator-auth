@@ -11,6 +11,6 @@
 - [x] **T005** Replace `validationSchema`/`validationOptions` with `validate: validateEnv` · _AC-4_ · verify: boot with a short secret → readable error
 - [x] **T006** `vitest.config.ts` + `vitest.config.e2e.ts`. Port specs (`jest.*` → `vi.*`). e2e env via config · _FR-3, AC-2_ · verify: 28 unit + 20 e2e green
 - [x] **T007** Build + boot smoke: signup, health, Swagger · _AC-3_
-- [x] **T008** [P] OpenAPI export script + CI drift check · _AC-6_
-- [x] **T009** [P] Update CI (Vitest coverage), Dockerfile check, docs, ADR-0006, CHANGELOG · _FR-6_
+- [x] **T008** [P] OpenAPI export script + drift check · _AC-6_
+- [x] **T009** [P] Update tooling (Vitest coverage), Dockerfile check, docs, ADR-0006, CHANGELOG · _FR-6_
 - [x] **T010** Full `npm run verify` + browser smoke of the whole journey · _FR-4_

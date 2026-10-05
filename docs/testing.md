@@ -24,8 +24,8 @@
 | `DB_DRIVER=mongo MONGODB_URI=mongodb://localhost:27017/e2e npm run test:e2e` | Same suite against real MongoDB                    |
 
 E2E boots `AppModule.forRoot()` and applies the **same** `configureApp()` as `main.ts`. Env
-defaults live in `vitest.config.e2e.ts`. Variables already set in the shell win, which is how CI
-switches to MongoDB.
+defaults live in `vitest.config.e2e.ts`. Variables already set in the shell win, which is how you
+switch the suite to a real MongoDB.
 
 ## Frontend (`frontend/`)
 
@@ -39,11 +39,23 @@ Helpers live in `src/test/utils.tsx`:
 - `mockApi({ 'POST /api/auth/signin': () => ({ status: 200, body }) })` is a strict fetch fake. Unhandled requests throw.
 - `renderApp('/signup')` renders the real route table with all providers.
 
-## CI
+## Quality gates
 
-`.github/workflows/ci.yml` runs on every push and PR: audit → lint → typecheck → unit (+coverage
-artifact) → e2e (memory) → e2e (MongoDB service) → build → OpenAPI drift check. The frontend
-job runs lint, typecheck, tests and build, then the Docker images are built.
+There is no CI pipeline ([ADR-0009](./adr/0009-local-quality-gates-instead-of-ci.md)). The gates run locally:
+
+| When           | What                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------- |
+| every commit   | `pre-commit`: ESLint/Prettier on staged files (lint-staged). `commit-msg`: commitlint |
+| before pushing | `npm run verify`: lint → typecheck → unit → e2e (memory) → frontend tests → builds    |
+| API changes    | `npm run openapi:check`: the committed OpenAPI contract matches the code              |
+| periodically   | `npm run audit`, plus e2e against real MongoDB (below)                                |
+
+E2E against a real MongoDB:
+
+```bash
+docker compose up -d mongo
+DB_DRIVER=mongo MONGODB_URI=mongodb://localhost:27017/easygenerator-auth-e2e npm run test:e2e --prefix backend
+```
 
 ## Writing a new test
 

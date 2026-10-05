@@ -24,5 +24,5 @@ Option 2. `UsersRepository` is an abstract class (it doubles as the DI token). A
 ## Consequences
 
 - ✅ Service tests use the real in-memory adapter, not mocks. E2E runs without MongoDB locally.
-- ✅ CI runs the same e2e suite against a real MongoDB to keep both adapters honest.
+- ✅ The same e2e suite runs against a real MongoDB (`DB_DRIVER=mongo`) to keep both adapters honest.
 - ⚠️ Two adapters must keep identical semantics (uniqueness, CAS). The shared e2e suite enforces this.

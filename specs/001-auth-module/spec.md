@@ -82,7 +82,7 @@ Each criterion maps to at least one automated test (see [tasks.md](./tasks.md) f
 | NFR-7  | Observability   | Structured logs with a request id, returned as `x-request-id`                                                 |
 | NFR-8  | Accessibility   | Labelled inputs, errors announced (`role="alert"`, `aria-invalid`, `aria-describedby`), keyboard usable       |
 | NFR-9  | UX              | Responsive from 360 px. Loading states on submit                                                              |
-| NFR-10 | Maintainability | TypeScript strict on both sides, lint-clean, tests at every layer, CI on every push                           |
+| NFR-10 | Maintainability | TypeScript strict on both sides, lint-clean, tests at every layer, git-hook quality gates                     |
 | NFR-11 | API docs        | OpenAPI/Swagger generated from code                                                                           |
 
 ## 6. Edge cases & error states

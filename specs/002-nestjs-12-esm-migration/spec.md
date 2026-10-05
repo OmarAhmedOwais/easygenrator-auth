@@ -29,7 +29,7 @@ and no behaviour change.
 | FR-3 | Unit + e2e tests run on **Vitest**, following the official Nest 12 `ts-esm` starter       | Must     |
 | FR-4 | No API behaviour change: same routes, status codes, payloads, cookies                     | Must     |
 | FR-5 | Companion upgrades required by Nest 12: TypeScript 6, Mongoose 9, nestjs-pino 5 / pino 10 | Must     |
-| FR-6 | Docker image, CI and docs updated                                                         | Must     |
+| FR-6 | Docker image, tooling and docs updated                                                    | Must     |
 
 ## 4. Acceptance criteria
 

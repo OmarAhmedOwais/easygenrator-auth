@@ -30,7 +30,7 @@ npm run dev:web                     # terminal 2 → http://localhost:5173
 2. Branch from `main`: `feat/<short-name>`, `fix/<short-name>`, `chore/…`, `docs/…`.
 3. Commit with [Conventional Commits](https://www.conventionalcommits.org): `feat(backend): add password reset`. The `commit-msg` hook enforces it. Allowed scopes: backend, frontend, docs, ci, deps, specs, repo.
 4. The `pre-commit` hook runs ESLint/Prettier on staged files (lint-staged).
-5. Open a PR using the template. CI must be green. Record significant decisions as an [ADR](./adr/README.md).
+5. Open a PR using the template. `npm run verify` must pass (there is no CI, see ADR-0009). Record significant decisions as an [ADR](./adr/README.md).
 6. Add a line to `CHANGELOG.md` under **Unreleased**.
 
 ## Conventions (summary)

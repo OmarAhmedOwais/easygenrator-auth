@@ -19,7 +19,7 @@ The follow-up instructions that shaped the result:
 
 - _"Production-ready, but it's a few-hours task: borrow bewafra's port/adapter idea, drop its CQRS/event bus."_
 - _"Refresh tokens must rotate and detect reuse. Store only a hash. Don't keep the access token in localStorage."_
-- _"Tests must hit the real HTTP stack (`configureApp` shared with `main.ts`), and the e2e suite must run both in-memory and against a real MongoDB in CI."_
+- _"Tests must hit the real HTTP stack (`configureApp` shared with `main.ts`), and the same e2e suite must be able to run in-memory and against a real MongoDB."_
 - _"Prove the UI works: run both servers and drive the full flow in a headless browser (sign up → welcome → reload keeps the session → log out → bad sign-in), plus a mobile screenshot."_
 - _"Use the latest NestJS (12), done the way the framework authors recommend, not a downgrade."_
 - _"Make the repo look like a senior team's: specs per step (spec → plan → tasks), ADRs, architecture/security/testing/deployment docs, the standard community files, and skills + slash commands so the next AI-assisted change follows the same process."_
@@ -35,7 +35,7 @@ Almost all of the code was AI-generated and then reviewed by me:
 | Repository port + Mongoose/in-memory adapters                 | ✅              | Chose the pattern (from bewafra) and the `DB_DRIVER` switch                                            |
 | Tests (backend unit + e2e, frontend Vitest)                   | ✅              | Defined what must be covered (enumeration, reuse detection, injection, secrets never in responses)     |
 | Frontend pages, form components, API client                   | ✅              | Design direction, UX details (live password checklist, 409 → email field)                              |
-| Docker, nginx, CI, README, CLAUDE.md, AGENTS.md               | ✅              | Reviewed for accuracy against the code                                                                 |
+| Docker, nginx, git hooks, README, CLAUDE.md, AGENTS.md        | ✅              | Reviewed for accuracy against the code                                                                 |
 | Specs (spec/plan/tasks), ADRs, guides, skills, slash commands | ✅              | Chose the spec-driven process and doc set. Checked every AC → test mapping against the real test names |
 
 ## 3. What had to be corrected or reworked
@@ -51,7 +51,7 @@ These are real problems from the session. Most were caught by lint, the type che
 7. **UI bug:** the password checklist rendered twice when the password field had an error. Fixed in `FormField` (error and hint render independently).
 8. **Wrong test expectation:** a test expected "valid email" for an empty field, but the schema correctly says "Email is required". The test was fixed, not the schema.
 9. **Bundle-size warning** (one 546 kB chunk). Split into cacheable `react` and `vendor` chunks.
-10. **No MongoDB binary in the sandbox** (downloads blocked), so `mongodb-memory-server` wasn't an option. That pushed me toward the in-memory adapter for fast e2e runs, with the **same e2e suite running against a real MongoDB service in GitHub Actions**. That's better coverage than mocking Mongoose anyway.
+10. **No MongoDB binary in the sandbox** (downloads blocked), so `mongodb-memory-server` wasn't an option. That pushed me toward the in-memory adapter for fast e2e runs, with the **same e2e suite switchable to a real MongoDB** (`DB_DRIVER=mongo`). That's better coverage than mocking Mongoose. It still needs one run against a real MongoDB (`docker compose up -d mongo`), which the sandbox couldn't do.
 
 ## 4. Decisions I made differently from the AI or the references
 
@@ -61,10 +61,10 @@ These are real problems from the session. Most were caught by lint, the type che
 - **Sign-in does not re-check password strength.** Only sign-up enforces the policy, and sign-in returns one generic message for both failure cases, with a dummy-hash verify so timing doesn't reveal which emails exist.
 - **Same-origin by design** (Vite proxy in dev, nginx in Docker) instead of cross-origin CORS with `SameSite=None` cookies, which would also need CSRF tokens.
 - **Single active session per user**, a conscious scope cut that's documented in the README with the upgrade path (a sessions collection).
-- **goal-track's CI had `continue-on-error: true` on tests.** Removed: a red test must fail the pipeline.
+- **No GitHub Actions pipeline.** The AI generated a full CI workflow. I removed it: for a single-developer assessment it adds maintenance without adding reviewer value. The same gates run locally through git hooks (lint-staged, commitlint) and `npm run verify` ([ADR-0009](./docs/adr/0009-local-quality-gates-instead-of-ci.md)). (goal-track's CI also had `continue-on-error: true` on tests, which is the opposite of a gate.)
 - **NestJS 12 + Vitest instead of the AI's proposed downgrade to NestJS 11** (see §3.1).
 - **Kept type-aware typescript-eslint** although the Nest 12 starter ships oxlint. The type-checked rules (unsafe `any`, floating promises) caught real issues in this codebase.
-- **The OpenAPI contract is generated from code** (`npm run openapi`) and CI fails on drift, so the spec's contract can't silently go stale.
+- **The OpenAPI contract is generated from code** (`npm run openapi`) and `npm run openapi:check` fails on drift, so the spec's contract can't silently go stale.
 
 ## 5. Prompts and approaches that worked well
 

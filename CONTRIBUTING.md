@@ -22,7 +22,7 @@ cp backend/.env.example backend/.env && cp frontend/.env.example frontend/.env
 1. Branch: `feat/…`, `fix/…`, `docs/…`, `chore/…`.
 2. Commits: [Conventional Commits](https://www.conventionalcommits.org), e.g. `fix(backend): return 404 for deleted user`. Enforced by commitlint.
 3. Before pushing: `npm run verify` (lint, typecheck, tests, builds).
-4. Open a PR with the template filled in and keep it small and focused. CI must be green.
+4. Open a PR with the template filled in and keep it small and focused. `npm run verify` must pass.
 5. Update `CHANGELOG.md` under **Unreleased**.
 
 ## Code standards

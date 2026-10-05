@@ -5,6 +5,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · Versioning: 
 
 ## [Unreleased]
 
+### Removed
+
+- GitHub Actions workflow. Quality gates are local: git hooks (lint-staged, commitlint) + `npm run verify` ([ADR-0009](./docs/adr/0009-local-quality-gates-instead-of-ci.md)).
+
+### Added
+
+- `npm run openapi:check` (backend and root) to fail when the OpenAPI contract is out of date, and `npm run audit` at the root.
+
 ## [1.1.0] - 2026-10-05
 
 ### Changed

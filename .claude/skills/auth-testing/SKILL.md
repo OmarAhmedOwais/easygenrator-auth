@@ -17,7 +17,7 @@ description: >-
 | HTTP e2e   | `test/*.e2e-spec.ts`                 | Boot `AppModule.forRoot()` + `configureApp(app)` (same as prod), drive with Supertest. Env defaults in `vitest.config.e2e.ts`             |
 
 - Backend is ESM: import with `.js` suffixes, use `vi.fn()`/`vi.spyOn()` (globals enabled).
-- e2e defaults to `DB_DRIVER=memory`. CI runs the same suite again with `DB_DRIVER=mongo` against a MongoDB service, so adapter behaviour must match exactly.
+- e2e defaults to `DB_DRIVER=memory`. Run it again with `DB_DRIVER=mongo` against a real MongoDB (`docker compose up -d mongo`) before merging persistence changes. Adapter behaviour must match exactly.
 - Assert behaviour (status codes, body shape, cookies, "secrets never in body") over mock call counts.
 - Every auth change covers the success path, each validation rule, and each failure (401, 409, reuse detection, missing cookie).
 - Run: `npm test`, `npm run test:e2e`, `DB_DRIVER=mongo MONGODB_URI=mongodb://localhost:27017/x npm run test:e2e`.

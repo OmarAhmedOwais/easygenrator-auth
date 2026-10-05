@@ -15,3 +15,4 @@ that supersedes the old one. Format: a lightweight [MADR](https://adr.github.io/
 | [0006](./0006-nestjs-12-native-esm-and-vitest.md)                | NestJS 12 as native ESM, tested with Vitest                          | Accepted (supersedes the NestJS 11 pin) |
 | [0007](./0007-same-origin-deployment.md)                         | Serve SPA and API from the same origin                               | Accepted                                |
 | [0008](./0008-spec-driven-development.md)                        | Spec-driven development workflow                                     | Accepted                                |
+| [0009](./0009-local-quality-gates-instead-of-ci.md)              | Local quality gates instead of a CI pipeline                         | Accepted                                |

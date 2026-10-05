@@ -30,8 +30,8 @@ the companion libraries Nest 12 requires, adapt the few APIs that changed, and k
 | `tsconfig*.json` | `nodenext`, `resolvePackageJsonExports`, `isolatedModules`, `types: [node, vitest/globals]`                                                                 |
 | Source           | `.js` suffix on every relative import (scripted). `import Joi from 'joi'`. `await bootstrap()`                                                              |
 | Config           | `validate: validateEnv` (Joi, abortEarly false)                                                                                                             |
-| Tests            | `vitest.config.ts`, `vitest.config.e2e.ts` (env defaults; shell env wins so CI can set `DB_DRIVER=mongo`). `jest.*` → `vi.*`                                |
-| Tooling          | `npm run openapi` exports the contract. CI checks drift                                                                                                     |
+| Tests            | `vitest.config.ts`, `vitest.config.e2e.ts` (env defaults; shell env wins, so `DB_DRIVER=mongo` switches to real MongoDB). `jest.*` → `vi.*`                 |
+| Tooling          | `npm run openapi` exports the contract, `openapi:check` catches drift                                                                                       |
 | Docs             | ADR-0006, README, CLAUDE.md, skills, AI.md, CHANGELOG                                                                                                       |
 
 ## 4. Risks
@@ -40,7 +40,7 @@ the companion libraries Nest 12 requires, adapt the few APIs that changed, and k
 | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | CJS-only dependencies imported from ESM (`joi`, `cookie-parser`, `argon2`) | Default imports through Node's CJS interop. Verified by boot + e2e                                           |
 | Decorator metadata missing under Vitest → DI fails silently                | Service specs resolve real providers via `Test.createTestingModule`. They fail loudly if metadata is missing |
-| Mongoose 9 typing changes                                                  | `tsc --noEmit` + e2e on real MongoDB in CI                                                                   |
+| Mongoose 9 typing changes                                                  | `tsc --noEmit` + e2e with `DB_DRIVER=mongo`                                                                  |
 
 ## 5. Rollback
 

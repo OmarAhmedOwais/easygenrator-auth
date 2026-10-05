@@ -38,7 +38,7 @@ JWT signing secrets.
 
 ## Supply chain
 
-- Lockfiles committed. CI uses `npm ci` + `npm audit --omit=dev --audit-level=high`.
+- Lockfiles committed. `npm run install:all` uses `npm ci`. `npm run audit` runs `npm audit --omit=dev --audit-level=high` on both packages.
 - Dependabot weekly for npm (grouped), monthly for Actions and Docker base images.
 - Docker: multi-stage builds, production deps only, non-root `node` user.
 

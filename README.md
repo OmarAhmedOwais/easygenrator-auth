@@ -1,6 +1,5 @@
 # Easygenerator: Full Stack Auth Module
 
-[![CI](https://github.com/OmarAhmedOwais/easygenerator-auth/actions/workflows/ci.yml/badge.svg)](https://github.com/OmarAhmedOwais/easygenerator-auth/actions/workflows/ci.yml)
 ![NestJS](https://img.shields.io/badge/NestJS-12-E0234E?logo=nestjs)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
@@ -9,11 +8,11 @@
 
 Sign-up and sign-in module built for the Easygenerator full-stack test task. It's production-minded and spec-driven, with every acceptance criterion covered by tests.
 
-|              |                                                                                                                      |
-| ------------ | -------------------------------------------------------------------------------------------------------------------- |
-| **Frontend** | React 19 · TypeScript · Vite · Tailwind CSS v4 · react-hook-form + zod · TanStack Query · React Router 7             |
-| **Backend**  | NestJS 12 (native ESM) · MongoDB + Mongoose 9 · Passport-JWT · argon2id · Swagger · pino                             |
-| **Quality**  | Vitest (both sides) · Supertest · Testing Library · ESLint + Prettier · husky + commitlint · GitHub Actions · Docker |
+|              |                                                                                                                   |
+| ------------ | ----------------------------------------------------------------------------------------------------------------- |
+| **Frontend** | React 19 · TypeScript · Vite · Tailwind CSS v4 · react-hook-form + zod · TanStack Query · React Router 7          |
+| **Backend**  | NestJS 12 (native ESM) · MongoDB + Mongoose 9 · Passport-JWT · argon2id · Swagger · pino                          |
+| **Quality**  | Vitest (both sides) · Supertest · Testing Library · ESLint + Prettier · husky + lint-staged + commitlint · Docker |
 
 > 📄 **[AI.md](./AI.md)**: how AI was used · 📐 **[specs/](./specs/README.md)**: spec → plan → tasks · 🧭 **[docs/](./docs/README.md)**: architecture, API, security, ADRs
 
@@ -24,7 +23,7 @@ Sign-up and sign-in module built for the Easygenerator full-stack test task. It'
 - **Application page** with _"Welcome to the application."_ and **Log out**, reachable only when signed in.
 - **Protected endpoint** `GET /api/users/me` (Bearer token).
 - **Secure sessions:** a 15-minute access token kept in memory + a 7-day **httpOnly, SameSite=Strict refresh cookie** with **rotation and reuse detection**. The session survives reloads, and logout revokes it on the server.
-- **Bonus:** rate limiting, Helmet + CSP, Swagger + exported OpenAPI contract, structured logs with request ids, health check, consistent error format, fail-fast env validation, Docker Compose, CI.
+- **Bonus:** rate limiting, Helmet + CSP, Swagger + exported OpenAPI contract, structured logs with request ids, health check, consistent error format, fail-fast env validation, Docker Compose, git hooks as local quality gates.
 
 ## Quick start
 
@@ -57,6 +56,7 @@ No MongoDB? Set `DB_DRIVER=memory` in `backend/.env` (in-memory adapter, for dem
 | `npm run verify`                                | lint + typecheck + all tests + builds. Run this before pushing |
 | `npm run dev:api` / `dev:web`                   | dev servers                                                    |
 | `npm run lint` · `typecheck` · `test` · `build` | across both packages                                           |
+| `npm run openapi:check` · `audit`               | OpenAPI contract drift check · dependency audit                |
 
 Per package: `backend/` has `test`, `test:e2e`, `test:cov`, `openapi`. `frontend/` has `test`, `test:cov`. See [docs/development.md](./docs/development.md).
 
@@ -81,7 +81,7 @@ frontend/           React SPA (src/features/{auth,home}, api/, components/ui/)
 specs/              001-auth-module, 002-nestjs-12-esm-migration (spec · plan · research · data model · tasks · contracts)
 docs/               architecture · api · security · testing · development · deployment · runbook · adr/
 .claude/            skills/ · commands/ (/specify /plan /tasks /implement /verify /review) · agents/
-.github/            CI workflow · PR/issue templates · CODEOWNERS · Dependabot
+.github/            PR/issue templates · CODEOWNERS · Dependabot
 CLAUDE.md, AGENTS.md  rules for AI coding agents
 AI.md               how AI was used (required by the task)
 ```
@@ -98,6 +98,7 @@ Spec-driven ([ADR-0008](./docs/adr/0008-spec-driven-development.md)): each chang
 | 0005 | argon2id password hashing                                 |
 | 0006 | NestJS 12 native ESM + Vitest                             |
 | 0007 | Same-origin deployment (nginx / Vite proxy)               |
+| 0009 | Local quality gates (git hooks + `verify`) instead of CI  |
 
 ## Security highlights
 
@@ -107,7 +108,7 @@ argon2id · generic auth errors + dummy-hash timing equalisation · throttling o
 
 - **One active session per user.** A sessions collection would enable multi-device sessions and "log out everywhere".
 - **Rules are mirrored, not shared** (`auth-rules.ts` ↔ `schemas.ts`). A shared workspace package would remove the duplication.
-- Not done yet: email verification, password reset, account lockout, Redis-backed throttling for multiple instances, Playwright E2E in CI.
+- Not done yet: email verification, password reset, account lockout, Redis-backed throttling for multiple instances, Playwright browser E2E, a CI pipeline if the project grows beyond the assessment ([ADR-0009](./docs/adr/0009-local-quality-gates-instead-of-ci.md)).
 
 ## Contributing
 

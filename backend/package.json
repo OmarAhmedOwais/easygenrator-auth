@@ -17,7 +17,8 @@
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "openapi": "nest build && node dist/scripts/export-openapi.js",
     "start:debug": "nest start --debug --watch",
-    "lint:files": "eslint --fix"
+    "lint:files": "eslint --fix",
+    "openapi:check": "npm run openapi && git diff --exit-code -- ../specs/001-auth-module/contracts/openapi.json"
   },
   "license": "MIT",
   "dependencies": {

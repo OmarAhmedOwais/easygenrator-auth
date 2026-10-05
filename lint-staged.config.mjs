@@ -1,7 +1,7 @@
 /**
  * Pre-commit: lint + format only the staged files, with each package's own ESLint version and
- * config (`npm run … --prefix <pkg>` runs inside that package). Type-checking and tests run in CI
- * and in `npm run verify`, which keeps commits fast.
+ * config (`npm run … --prefix <pkg>` runs inside that package). Type-checking and tests run in
+ * `npm run verify`, which keeps commits fast.
  */
 const inPkg = (pkg, files) =>
   files.map((f) => f.replace(/\\/g, '/').split(`/${pkg}/`).pop()).join(' ');

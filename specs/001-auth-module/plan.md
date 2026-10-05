@@ -10,7 +10,7 @@
 A NestJS 12 API with MongoDB issues a short-lived JWT access token (kept in memory by the SPA) and
 a rotating, single-use refresh token (httpOnly cookie). A React 19 SPA provides the sign-up,
 sign-in and application pages, with route guards and an API client that refreshes transparently.
-Both sides validate the same rules. Everything ships with tests, Swagger, Docker and CI.
+Both sides validate the same rules. Everything ships with tests, Swagger, Docker and local quality gates.
 
 ## 2. Constraints & assumptions
 
@@ -55,7 +55,7 @@ Frontend: `features/auth` (schemas, context, guards, pages), `api/` (single fetc
 ## 4. Contracts
 
 The full machine-readable contract is [contracts/openapi.json](./contracts/openapi.json),
-generated from the code (`npm run openapi`) and checked for drift in CI.
+generated from the code (`npm run openapi`) and checked for drift with `npm run openapi:check`.
 
 | Method | Path                | Auth              | Success                             | Errors        |
 | ------ | ------------------- | ----------------- | ----------------------------------- | ------------- |
@@ -90,13 +90,13 @@ Full threat model: [docs/security.md](../../docs/security.md).
 
 ## 7. Test strategy
 
-| Layer             | What                                                                                         | Where                                                |
-| ----------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| Unit (API)        | password rules, argon2 hasher, auth service (rotation, reuse, enumeration), error filter     | `backend/src/**/*.spec.ts` (Vitest)                  |
-| E2E (API)         | every AC over real HTTP with production `configureApp`; in-memory **and** real MongoDB in CI | `backend/test/auth.e2e-spec.ts` (Vitest + Supertest) |
-| Unit (web)        | zod schemas, API client refresh/replay/single-flight                                         | `frontend/src/**/*.test.ts`                          |
-| Integration (web) | full flows through router + providers with a fetch fake                                      | `frontend/src/features/auth/auth-flow.test.tsx`      |
-| Manual / smoke    | headless browser run of the full journey + mobile viewport                                   | documented in [tasks.md](./tasks.md) T040            |
+| Layer             | What                                                                                                       | Where                                                |
+| ----------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Unit (API)        | password rules, argon2 hasher, auth service (rotation, reuse, enumeration), error filter                   | `backend/src/**/*.spec.ts` (Vitest)                  |
+| E2E (API)         | every AC over real HTTP with production `configureApp`; in-memory, and real MongoDB with `DB_DRIVER=mongo` | `backend/test/auth.e2e-spec.ts` (Vitest + Supertest) |
+| Unit (web)        | zod schemas, API client refresh/replay/single-flight                                                       | `frontend/src/**/*.test.ts`                          |
+| Integration (web) | full flows through router + providers with a fetch fake                                                    | `frontend/src/features/auth/auth-flow.test.tsx`      |
+| Manual / smoke    | headless browser run of the full journey + mobile viewport                                                 | documented in [tasks.md](./tasks.md) T040            |
 
 ## 8. Rollout & operations
 
@@ -110,7 +110,7 @@ Full threat model: [docs/security.md](../../docs/security.md).
 | ------------------------------------------------------- | ---------- | ------ | ------------------------------------------------------------------------------------------------ |
 | Refresh race logs users out (StrictMode, multiple tabs) | High       | High   | Single-flight + Web Locks on the client, compare-and-swap on the server                          |
 | Rules drift between client and server                   | Medium     | Medium | One rules file per side, cross-referenced, tested on both sides                                  |
-| No MongoDB in the dev sandbox                           | High       | Medium | In-memory adapter behind the port. CI runs e2e against real MongoDB                              |
+| No MongoDB in the dev sandbox                           | High       | Medium | In-memory adapter behind the port. Same e2e suite runs against real MongoDB                      |
 | Bleeding-edge NestJS 12 (ESM-only) tooling gaps         | Medium     | Medium | Follow the official ESM starter (Vitest). See [spec 002](../002-nestjs-12-esm-migration/spec.md) |
 
 ## 10. Implementation phases
@@ -121,4 +121,4 @@ Full threat model: [docs/security.md](../../docs/security.md).
 4. **API tests**: unit + e2e.
 5. **Frontend**: tokens/UI primitives, API client, auth context + guards, pages.
 6. **Frontend tests**.
-7. **Delivery**: Docker, nginx, CI, docs, AI.md.
+7. **Delivery**: Docker, nginx, git hooks, docs, AI.md.

@@ -30,7 +30,7 @@ docs/       architecture, api, security, testing, development, deployment, runbo
 | everything (lint, types, tests, builds) | root        | `npm run verify`                                                |
 | dev servers                             | root        | `npm run dev:api` · `npm run dev:web`                           |
 | backend unit / e2e                      | `backend/`  | `npm test` · `npm run test:e2e` (`DB_DRIVER=mongo` for real DB) |
-| OpenAPI contract                        | `backend/`  | `npm run openapi` (CI fails on drift)                           |
+| OpenAPI contract                        | `backend/`  | `npm run openapi` · `npm run openapi:check` (fails on drift)    |
 | frontend tests                          | `frontend/` | `npm test`                                                      |
 
 A change is not done until `npm run verify` passes.
@@ -47,7 +47,7 @@ A change is not done until `npm run verify` passes.
 8. **Backend is ESM:** relative imports end in `.js`. Use `vi.*` in tests (ADR-0006).
 9. **Config goes through `ConfigService<AppConfig, true>`.** New env vars go in `env.validation.ts`, `configuration.ts`, `.env.example` and `docs/deployment.md`.
 10. **Every behaviour change ships with tests** (`auth-testing` skill) and keeps the spec, docs and OpenAPI contract in sync.
-11. **Conventional Commits** (`git-workflow` skill). Hooks run lint-staged and commitlint.
+11. **Conventional Commits** (`git-workflow` skill). Hooks run lint-staged and commitlint. There is no CI pipeline: the hooks and `npm run verify` are the quality gates (ADR-0009).
 
 ## Skills
 
@@ -65,4 +65,4 @@ A change is not done until `npm run verify` passes.
 
 MongoDB + Mongoose (0002) · memory access token + rotating httpOnly refresh cookie (0003) · port/adapter
 without CQRS (0004) · argon2id (0005) · NestJS 12 ESM + Vitest (0006) · same-origin deployment (0007)
-· spec-driven workflow (0008).
+· spec-driven workflow (0008) · local quality gates instead of CI (0009).

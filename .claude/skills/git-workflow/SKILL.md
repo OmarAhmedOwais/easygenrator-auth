@@ -33,7 +33,7 @@ force-push to `main`.
 
 - Title in Conventional Commit form (it becomes the squash commit).
 - Fill in `.github/PULL_REQUEST_TEMPLATE.md`: link the spec/issue, explain _how_, tick the checklist.
-- Small PRs (< ~400 changed lines excluding lockfiles/generated). `npm run verify` and CI must be green.
+- Small PRs (< ~400 changed lines excluding lockfiles/generated). `npm run verify` must pass (no CI pipeline; ADR-0009).
 - API change → regenerate `specs/*/contracts/openapi.json` (`npm run openapi` in backend).
 
 ## Changelog & releases

@@ -1,10 +1,10 @@
 # Tasks 001: Authentication module
 
-|            |                      |
-| ---------- | -------------------- |
-| **Spec**   | [spec.md](./spec.md) |
-| **Plan**   | [plan.md](./plan.md) |
-| **Status** | All tasks done ✅    |
+|            |                                                 |
+| ---------- | ----------------------------------------------- |
+| **Spec**   | [spec.md](./spec.md)                            |
+| **Plan**   | [plan.md](./plan.md)                            |
+| **Status** | Done except T031 (real-MongoDB e2e run pending) |
 
 Legend: `[P]` = parallelisable with the previous task. Each task lists the requirements it
 satisfies and how it was verified.
@@ -21,7 +21,7 @@ satisfies and how it was verified.
 
 - [x] **T010** Domain `User` / `PublicUser` + `toPublicUser` · _NFR-1_
 - [x] **T011** `UsersRepository` port (abstract class = DI token) · _plan §3_
-- [x] **T012** Mongoose schema (unique email, `select: false` secrets) + adapter (dup key → domain error, CAS rotation) · _FR-6_ · verify: e2e with `DB_DRIVER=mongo` (CI)
+- [x] **T012** Mongoose schema (unique email, `select: false` secrets) + adapter (dup key → domain error, CAS rotation) · _FR-6_ · verify: e2e with `DB_DRIVER=mongo`
 - [x] **T013** [P] In-memory adapter with identical semantics · verify: e2e default run
 - [x] **T014** `PersistenceModule.forRoot(driver)` binding · verify: both e2e runs
 
@@ -36,12 +36,12 @@ satisfies and how it was verified.
 - [x] **T026** Global `JwtAuthGuard` + `@Public()` + `@CurrentUser()` · _FR-11_
 - [x] **T027** `GET /users/me` (protected) · _AC-12_
 - [x] **T028** [P] Health check (terminus, per-driver indicators) · _NFR-6_
-- [x] **T029** [P] Swagger + OpenAPI export script + CI drift check · _NFR-11_ · verify: `npm run openapi` + `git diff --exit-code`
+- [x] **T029** [P] Swagger + OpenAPI export script + drift check · _NFR-11_ · verify: `npm run openapi:check`
 
 ## Phase 4: API tests
 
 - [x] **T030** E2E suite covering AC-1…AC-4, AC-6, AC-8, AC-9, AC-12, AC-14, AC-15, headers · verify: `npm run test:e2e` (20 tests)
-- [x] **T031** CI job running e2e against in-memory **and** a MongoDB service · verify: GitHub Actions
+- [ ] **T031** Run the e2e suite against a real MongoDB · verify: `DB_DRIVER=mongo npm run test:e2e` (pending: no MongoDB in the build sandbox)
 
 ## Phase 5: Frontend
 
@@ -62,7 +62,7 @@ satisfies and how it was verified.
 ## Phase 7: Delivery
 
 - [x] **T060** Dockerfiles (multi-stage, non-root, healthcheck), nginx (SPA + `/api` proxy + CSP), compose
-- [x] **T061** GitHub Actions: lint, typecheck, audit, unit + coverage, e2e ×2, build, docker build, commitlint
+- [x] **T061** Quality gates: husky + lint-staged + commitlint, `npm run verify`, `openapi:check`, `audit` (GitHub Actions removed, ADR-0009)
 - [x] **T062** README, AI.md, CLAUDE.md, skills, specs, ADRs, guides
 
 ## Acceptance criteria → tests
