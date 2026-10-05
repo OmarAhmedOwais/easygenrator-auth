@@ -14,14 +14,14 @@ import {
 } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import type { CookieOptions, Request, Response } from 'express';
-import { ErrorResponseDto } from '../../common/filters/error-response.dto';
-import type { AppConfig } from '../../config/configuration';
-import { REFRESH_COOKIE, REFRESH_COOKIE_PATH } from './auth.constants';
-import { type AuthSession, AuthService } from './auth.service';
-import { Public } from './decorators/public.decorator';
-import { AuthResponseDto } from './dto/auth-response.dto';
-import { SignInDto } from './dto/sign-in.dto';
-import { SignUpDto } from './dto/sign-up.dto';
+import { ErrorResponseDto } from '../../common/filters/error-response.dto.js';
+import type { AppConfig } from '../../config/configuration.js';
+import { REFRESH_COOKIE, REFRESH_COOKIE_PATH } from './auth.constants.js';
+import { type AuthSession, AuthService } from './auth.service.js';
+import { Public } from './decorators/public.decorator.js';
+import { AuthResponseDto } from './dto/auth-response.dto.js';
+import { SignInDto } from './dto/sign-in.dto.js';
+import { SignUpDto } from './dto/sign-up.dto.js';
 
 /**
  * Token transport:

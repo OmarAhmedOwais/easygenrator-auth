@@ -2,7 +2,7 @@ import { type ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import type { Observable } from 'rxjs';
-import { IS_PUBLIC_KEY } from '../auth.constants';
+import { IS_PUBLIC_KEY } from '../auth.constants.js';
 
 /** Registered as APP_GUARD: every route requires a valid access token unless `@Public()`. */
 @Injectable()

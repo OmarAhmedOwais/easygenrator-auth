@@ -1,10 +1,10 @@
 import { type ArgumentsHost, BadRequestException, NotFoundException } from '@nestjs/common';
-import { AllExceptionsFilter } from './all-exceptions.filter';
+import { AllExceptionsFilter } from './all-exceptions.filter.js';
 
 describe('AllExceptionsFilter', () => {
   const filter = new AllExceptionsFilter();
-  const json = jest.fn();
-  const status = jest.fn(() => ({ json }));
+  const json = vi.fn();
+  const status = vi.fn(() => ({ json }));
   const host = {
     switchToHttp: () => ({
       getResponse: () => ({ status }),
@@ -12,7 +12,7 @@ describe('AllExceptionsFilter', () => {
     }),
   } as unknown as ArgumentsHost;
 
-  beforeEach(() => jest.clearAllMocks());
+  beforeEach(() => vi.clearAllMocks());
 
   it('keeps validation messages as an array', () => {
     filter.catch(new BadRequestException(['email must be an email']), host);
@@ -35,7 +35,7 @@ describe('AllExceptionsFilter', () => {
   });
 
   it('hides internals of unknown errors behind a generic 500', () => {
-    jest.spyOn(filter['logger'], 'error').mockImplementation(() => undefined);
+    vi.spyOn(filter['logger'], 'error').mockImplementation(() => undefined);
     filter.catch(new Error('db password is hunter2'), host);
     expect(status).toHaveBeenCalledWith(500);
     expect(JSON.stringify(json.mock.calls)).not.toContain('hunter2');

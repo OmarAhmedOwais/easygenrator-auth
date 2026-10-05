@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { type PublicUser, toPublicUser } from './domain/user';
-import { UsersRepository } from './users.repository';
+import { type PublicUser, toPublicUser } from './domain/user.js';
+import { UsersRepository } from './users.repository.js';
 
 @Injectable()
 export class UsersService {

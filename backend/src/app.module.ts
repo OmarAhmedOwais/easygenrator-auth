@@ -3,12 +3,12 @@ import { type DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
-import configuration, { type AppConfig } from './config/configuration';
-import { envValidationSchema } from './config/env.validation';
-import { AuthModule } from './modules/auth/auth.module';
-import { HealthModule } from './modules/health/health.module';
-import { UsersModule } from './modules/users/users.module';
-import { type DbDriver, PersistenceModule } from './persistence/persistence.module';
+import configuration, { type AppConfig } from './config/configuration.js';
+import { validateEnv } from './config/env.validation.js';
+import { AuthModule } from './modules/auth/auth.module.js';
+import { HealthModule } from './modules/health/health.module.js';
+import { UsersModule } from './modules/users/users.module.js';
+import { type DbDriver, PersistenceModule } from './persistence/persistence.module.js';
 
 @Module({})
 export class AppModule {
@@ -21,9 +21,7 @@ export class AppModule {
       isGlobal: true,
       cache: true,
       load: [configuration],
-      validationSchema: envValidationSchema,
-      // Joi options: report every invalid variable at once, allow unrelated env vars.
-      validationOptions: { abortEarly: false, allowUnknown: true },
+      validate: validateEnv,
     });
     const driver = (process.env.DB_DRIVER ?? 'mongo') as DbDriver;
 

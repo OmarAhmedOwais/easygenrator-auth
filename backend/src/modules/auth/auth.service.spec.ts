@@ -1,12 +1,13 @@
+import type { Mock } from 'vitest';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
-import { InMemoryUsersRepository } from '../users/infrastructure/in-memory/in-memory-users.repository';
-import { UsersRepository } from '../users/users.repository';
-import { AuthService } from './auth.service';
-import { PasswordHasher } from './password-hasher.service';
-import { TokensService } from './tokens.service';
+import { InMemoryUsersRepository } from '../users/infrastructure/in-memory/in-memory-users.repository.js';
+import { UsersRepository } from '../users/users.repository.js';
+import { AuthService } from './auth.service.js';
+import { PasswordHasher } from './password-hasher.service.js';
+import { TokensService } from './tokens.service.js';
 
 /**
  * Real TokensService + real in-memory repository (the port's reference adapter); only the slow
@@ -15,14 +16,14 @@ import { TokensService } from './tokens.service';
 describe('AuthService', () => {
   let service: AuthService;
   let users: InMemoryUsersRepository;
-  let hasher: { hash: jest.Mock; verify: jest.Mock };
+  let hasher: { hash: Mock; verify: Mock };
 
   const signUp = { email: 'jane@example.com', name: 'Jane Doe', password: 'Passw0rd!' };
 
   beforeEach(async () => {
     hasher = {
-      hash: jest.fn((p: string) => Promise.resolve(`hashed:${p}`)),
-      verify: jest.fn((h: string | undefined, p: string) => Promise.resolve(h === `hashed:${p}`)),
+      hash: vi.fn((p: string) => Promise.resolve(`hashed:${p}`)),
+      verify: vi.fn((h: string | undefined, p: string) => Promise.resolve(h === `hashed:${p}`)),
     };
     const config = {
       get: () => ({

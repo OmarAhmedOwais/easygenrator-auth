@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import type { ErrorBody } from './all-exceptions.filter';
+import type { ErrorBody } from './all-exceptions.filter.js';
 
 export class ErrorResponseDto implements ErrorBody {
   @ApiProperty({ example: 400 }) statusCode: number;

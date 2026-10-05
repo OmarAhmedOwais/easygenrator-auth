@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserResponseDto } from '../../users/dto/user-response.dto';
+import { UserResponseDto } from '../../users/dto/user-response.dto.js';
 
 export class AuthResponseDto {
   @ApiProperty({ description: 'Short-lived JWT. Send as `Authorization: Bearer <token>`.' })

@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { IS_PUBLIC_KEY } from '../auth.constants';
+import { IS_PUBLIC_KEY } from '../auth.constants.js';
 
 /**
  * Routes are protected by default (global JwtAuthGuard). Opt out explicitly - a forgotten

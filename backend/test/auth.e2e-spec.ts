@@ -3,25 +3,14 @@ import { Test } from '@nestjs/testing';
 import { getConnectionToken } from '@nestjs/mongoose';
 import type { Connection } from 'mongoose';
 import request from 'supertest';
-import type { App } from 'supertest/types';
+
+import { AppModule } from '../src/app.module.js';
+import { configureApp } from '../src/app.setup.js';
 
 /**
  * Full HTTP flow through the real app (same `configureApp` as production).
- * Default: in-memory adapter. CI also runs this with DB_DRIVER=mongo against a MongoDB service,
- * which exercises the Mongoose adapter, unique index and atomic rotation for real.
+ * Env defaults come from vitest.config.e2e.ts (in-memory adapter unless DB_DRIVER=mongo).
  */
-process.env.NODE_ENV = 'test';
-process.env.LOG_LEVEL = 'silent';
-process.env.DB_DRIVER ??= 'memory';
-process.env.JWT_ACCESS_SECRET ??= 'e2e-access-secret-0123456789-abcdefghij';
-process.env.JWT_REFRESH_SECRET ??= 'e2e-refresh-secret-0123456789-abcdefghij';
-process.env.THROTTLE_LIMIT = '1000';
-
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { AppModule } = require('../src/app.module') as typeof import('../src/app.module');
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { configureApp } = require('../src/app.setup') as typeof import('../src/app.setup');
-
 const cookieFrom = (res: request.Response): string => {
   const raw = res.headers['set-cookie'] as unknown as string[] | undefined;
   const cookie = raw?.find((c) => c.startsWith('refresh_token='));
@@ -30,7 +19,7 @@ const cookieFrom = (res: request.Response): string => {
 };
 
 describe('Auth (e2e)', () => {
-  let app: INestApplication<App>;
+  let app: INestApplication;
   const user = { email: 'Jane.Doe@Example.com', name: 'Jane Doe', password: 'Passw0rd!' };
 
   beforeAll(async () => {

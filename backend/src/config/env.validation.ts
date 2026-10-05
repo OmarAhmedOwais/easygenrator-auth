@@ -1,4 +1,4 @@
-import * as Joi from 'joi';
+import Joi from 'joi';
 
 /**
  * Fail fast at boot: the process refuses to start with a missing/weak secret or a malformed
@@ -31,3 +31,16 @@ export const envValidationSchema = Joi.object({
   THROTTLE_TTL_MS: Joi.number().integer().positive().default(60_000),
   THROTTLE_LIMIT: Joi.number().integer().positive().default(10),
 });
+
+/**
+ * `ConfigModule.validate` hook. Reports every invalid variable at once (abortEarly: false),
+ * ignores unrelated variables, and returns the coerced values (numbers/booleans/defaults).
+ */
+export function validateEnv(config: Record<string, unknown>): Record<string, unknown> {
+  const result = envValidationSchema.validate(config, { abortEarly: false, allowUnknown: true });
+  if (result.error) {
+    const problems = result.error.details.map((d) => d.message).join('\n- ');
+    throw new Error(`Invalid environment configuration:\n- ${problems}`);
+  }
+  return result.value as Record<string, unknown>;
+}

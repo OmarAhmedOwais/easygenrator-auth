@@ -1,4 +1,4 @@
-import type { NewUser, User } from './domain/user';
+import type { NewUser, User } from './domain/user.js';
 
 /**
  * Persistence PORT. Abstract class (not an interface) so it doubles as the DI token.

@@ -1,5 +1,5 @@
 import { registerDecorator, type ValidationOptions } from 'class-validator';
-import { isStrongPassword, PASSWORD_RULES_MESSAGE } from './auth-rules';
+import { isStrongPassword, PASSWORD_RULES_MESSAGE } from './auth-rules.js';
 
 /** class-validator decorator for the spec's password policy. */
 export function IsStrongPassword(options?: ValidationOptions): PropertyDecorator {

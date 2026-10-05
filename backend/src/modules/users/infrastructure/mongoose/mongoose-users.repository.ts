@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, type Model } from 'mongoose';
-import { EmailAlreadyTakenError } from '../../domain/email-taken.error';
-import type { NewUser, User } from '../../domain/user';
-import { UsersRepository } from '../../users.repository';
-import { type UserDocument, UserDocumentModel } from './user.schema';
+import { EmailAlreadyTakenError } from '../../domain/email-taken.error.js';
+import type { NewUser, User } from '../../domain/user.js';
+import { UsersRepository } from '../../users.repository.js';
+import { type UserDocument, UserDocumentModel } from './user.schema.js';
 
 const SECRETS = '+passwordHash +refreshTokenHash';
 const DUPLICATE_KEY = 11000;

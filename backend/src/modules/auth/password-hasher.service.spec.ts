@@ -1,4 +1,4 @@
-import { PasswordHasher } from './password-hasher.service';
+import { PasswordHasher } from './password-hasher.service.js';
 
 describe('PasswordHasher (argon2id)', () => {
   const hasher = new PasswordHasher();

@@ -1,14 +1,14 @@
 import { type DynamicModule, Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import type { AppConfig } from '../config/configuration';
-import { InMemoryUsersRepository } from '../modules/users/infrastructure/in-memory/in-memory-users.repository';
-import { MongooseUsersRepository } from '../modules/users/infrastructure/mongoose/mongoose-users.repository';
+import type { AppConfig } from '../config/configuration.js';
+import { InMemoryUsersRepository } from '../modules/users/infrastructure/in-memory/in-memory-users.repository.js';
+import { MongooseUsersRepository } from '../modules/users/infrastructure/mongoose/mongoose-users.repository.js';
 import {
   UserDocumentModel,
   UserSchema,
-} from '../modules/users/infrastructure/mongoose/user.schema';
-import { UsersRepository } from '../modules/users/users.repository';
+} from '../modules/users/infrastructure/mongoose/user.schema.js';
+import { UsersRepository } from '../modules/users/users.repository.js';
 
 export type DbDriver = AppConfig['db']['driver'];
 

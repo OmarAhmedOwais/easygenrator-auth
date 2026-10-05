@@ -12,7 +12,9 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:cov": "vitest run --coverage"
+    "test:cov": "vitest run --coverage",
+    "lint:files": "eslint --fix",
+    "format:files": "prettier --write"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -56,5 +58,6 @@
   },
   "engines": {
     "node": ">=22"
-  }
+  },
+  "license": "MIT"
 }

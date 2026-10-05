@@ -1,11 +1,11 @@
 import { ConflictException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { EmailAlreadyTakenError } from '../users/domain/email-taken.error';
-import { type PublicUser, toPublicUser, type User } from '../users/domain/user';
-import { UsersRepository } from '../users/users.repository';
-import type { SignInDto } from './dto/sign-in.dto';
-import type { SignUpDto } from './dto/sign-up.dto';
-import { PasswordHasher } from './password-hasher.service';
-import { type TokenPair, TokensService } from './tokens.service';
+import { EmailAlreadyTakenError } from '../users/domain/email-taken.error.js';
+import { type PublicUser, toPublicUser, type User } from '../users/domain/user.js';
+import { UsersRepository } from '../users/users.repository.js';
+import type { SignInDto } from './dto/sign-in.dto.js';
+import type { SignUpDto } from './dto/sign-up.dto.js';
+import { PasswordHasher } from './password-hasher.service.js';
+import { type TokenPair, TokensService } from './tokens.service.js';
 
 export interface AuthSession {
   user: PublicUser;

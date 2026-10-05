@@ -4,8 +4,8 @@ import {
   MongooseHealthIndicator,
   TerminusModule,
 } from '@nestjs/terminus';
-import type { DbDriver } from '../../persistence/persistence.module';
-import { HEALTH_INDICATORS, HealthController } from './health.controller';
+import type { DbDriver } from '../../persistence/persistence.module.js';
+import { HEALTH_INDICATORS, HealthController } from './health.controller.js';
 
 @Module({})
 export class HealthModule {

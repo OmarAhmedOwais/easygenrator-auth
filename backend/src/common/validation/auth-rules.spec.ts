@@ -1,4 +1,4 @@
-import { isStrongPassword, normalizeEmail } from './auth-rules';
+import { isStrongPassword, normalizeEmail } from './auth-rules.js';
 
 describe('isStrongPassword', () => {
   it.each(['Passw0rd!', 'a1!aaaaa', 'Ünïcode9#x', 'long password 1 with space!'])(

@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
-import { PASSWORD_MAX_LENGTH } from '../../../common/validation/auth-rules';
-import { toNormalizedEmail } from '../../../common/validation/transforms';
+import { PASSWORD_MAX_LENGTH } from '../../../common/validation/auth-rules.js';
+import { toNormalizedEmail } from '../../../common/validation/transforms.js';
 
 /**
  * Sign-in deliberately does NOT re-apply the strength policy: the only question here is "does it

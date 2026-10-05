@@ -2,27 +2,25 @@
   "compilerOptions": {
     "module": "nodenext",
     "moduleResolution": "nodenext",
+    "resolvePackageJsonExports": true,
     "target": "ES2023",
     "lib": ["ES2023"],
-    "types": ["node", "jest"],
-    "declaration": false,
-    "removeComments": true,
+    "types": ["node", "vitest/globals"],
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
+    "removeComments": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./",
     "incremental": true,
     "skipLibCheck": true,
     "strict": true,
+    "strictPropertyInitialization": false,
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true,
-    "strictPropertyInitialization": false,
-    "useUnknownInCatchVariables": true,
-    "isolatedModules": true
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src", "test"]
+  "include": ["src", "test", "vitest.config.ts", "vitest.config.e2e.ts"]
 }

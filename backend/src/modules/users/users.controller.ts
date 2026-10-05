@@ -6,12 +6,12 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ErrorResponseDto } from '../../common/filters/error-response.dto';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { AuthenticatedUser } from '../auth/auth.types';
-import type { PublicUser } from './domain/user';
-import { UserResponseDto } from './dto/user-response.dto';
-import { UsersService } from './users.service';
+import { ErrorResponseDto } from '../../common/filters/error-response.dto.js';
+import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
+import type { AuthenticatedUser } from '../auth/auth.types.js';
+import type { PublicUser } from './domain/user.js';
+import { UserResponseDto } from './dto/user-response.dto.js';
+import { UsersService } from './users.service.js';
 
 @ApiTags('users')
 @ApiBearerAuth()

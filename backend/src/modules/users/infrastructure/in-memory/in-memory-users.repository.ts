@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
-import { EmailAlreadyTakenError } from '../../domain/email-taken.error';
-import type { NewUser, User } from '../../domain/user';
-import { UsersRepository } from '../../users.repository';
+import { EmailAlreadyTakenError } from '../../domain/email-taken.error.js';
+import type { NewUser, User } from '../../domain/user.js';
+import { UsersRepository } from '../../users.repository.js';
 
 /**
  * Same contract as the Mongo adapter, backed by a Map. Used by e2e tests (no DB needed) and

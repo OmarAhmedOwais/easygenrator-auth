@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import type { PublicUser } from '../domain/user';
+import type { PublicUser } from '../domain/user.js';
 
 export class UserResponseDto implements PublicUser {
   @ApiProperty({ example: '6700f1c2a3b4c5d6e7f80910' }) id: string;

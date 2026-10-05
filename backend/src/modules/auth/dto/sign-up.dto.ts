@@ -5,9 +5,9 @@ import {
   NAME_MAX_LENGTH,
   NAME_MIN_LENGTH,
   PASSWORD_MAX_LENGTH,
-} from '../../../common/validation/auth-rules';
-import { toNormalizedEmail, trimString } from '../../../common/validation/transforms';
-import { IsStrongPassword } from '../../../common/validation/is-strong-password.decorator';
+} from '../../../common/validation/auth-rules.js';
+import { toNormalizedEmail, trimString } from '../../../common/validation/transforms.js';
+import { IsStrongPassword } from '../../../common/validation/is-strong-password.decorator.js';
 
 export class SignUpDto {
   @ApiProperty({ example: 'jane@example.com' })

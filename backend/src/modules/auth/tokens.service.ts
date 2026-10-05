@@ -2,8 +2,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, type JwtSignOptions } from '@nestjs/jwt';
-import type { AppConfig } from '../../config/configuration';
-import type { AccessTokenPayload, RefreshTokenPayload } from './auth.types';
+import type { AppConfig } from '../../config/configuration.js';
+import type { AccessTokenPayload, RefreshTokenPayload } from './auth.types.js';
 
 export interface TokenPair {
   accessToken: string;

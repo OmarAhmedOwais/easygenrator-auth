@@ -7,7 +7,7 @@ import {
   HealthCheckService,
   type HealthIndicatorFunction,
 } from '@nestjs/terminus';
-import { Public } from '../auth/decorators/public.decorator';
+import { Public } from '../auth/decorators/public.decorator.js';
 
 export const HEALTH_INDICATORS = Symbol('HEALTH_INDICATORS');
 
